@@ -26,7 +26,7 @@ def procesar_datos(archivo_principal, archivo_generadores):
 
     # Renombrar y procesar columnas en el archivo principal
     df_principal['gran generador'] = df_principal['Id de referencia']
-    df_principal['Fecha Recolección'] = pd.to_datetime(df_principal['Checkout']).dt.strftime('%Y-%m-%d')
+    df_principal['Fecha Recolección'] = pd.to_datetime(df_principal['Fecha planificada']).dt.strftime('%Y-%m-%d')
     df_principal['Hora Recolección'] = pd.to_datetime(df_principal['Checkout']).dt.strftime('%H:%M:%S')
 
     # Combinar 'Observaciones' y 'Comentarios'
@@ -46,6 +46,11 @@ def procesar_datos(archivo_principal, archivo_generadores):
 
     # Unir la información de IDs en el DataFrame principal
     df_principal = df_principal.merge(ids_faltantes[['gran generador']], how='left', left_on='gran generador', right_on='gran generador')
+    
+    # Mostrar columnas para depuración
+    st.write("Columnas después del merge:", df_principal.columns)
+
+    # Actualizar el 'gran generador' con la información del merge
     df_principal['gran generador'] = df_principal['gran generador_y'].fillna(df_principal['gran generador_x'])
 
     # Eliminar columnas innecesarias
