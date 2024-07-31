@@ -1,12 +1,16 @@
 import pandas as pd
 import streamlit as st
+import io
 
-# Función para procesar los datos
 def procesar_datos(archivo_principal, archivo_generadores):
-    # Cargar los archivos de Excel
-    df = pd.read_excel(archivo_principal)
-    df_generadores = pd.read_excel(archivo_generadores)
-    
+    try:
+        # Cargar los archivos de Excel
+        df = pd.read_excel(archivo_principal)
+        df_generadores = pd.read_excel(archivo_generadores)
+    except Exception as e:
+        st.error(f"Error al leer los archivos: {e}")
+        return None
+
     # Renombrar columnas para el merge
     df_generadores.rename(columns={'Account Name': 'Título', 'Account ID': 'Id Generador'}, inplace=True)
     
@@ -40,10 +44,13 @@ archivo_generadores = st.file_uploader('Sube el archivo con los IDs de los gener
 
 if archivo_principal and archivo_generadores:
     df_resultado = procesar_datos(archivo_principal, archivo_generadores)
-    st.write(df_resultado)
-    
-    # Guardar el DataFrame final en un nuevo archivo Excel
-    df_resultado.to_excel('resultado.xlsx', index=False)
-    st.success('Archivo procesado y guardado como resultado.xlsx')
-    st.download_button(label='Descargar resultado', data=df_resultado.to_excel(index=False), file_name='resultado.xlsx')
-
+    if df_resultado is not None:
+        st.write(df_resultado)
+        
+        # Crear un buffer de bytes en memoria para el archivo Excel
+        output = io.BytesIO()
+        df_resultado.to_excel(output, index=False)
+        output.seek(0)  # Volver al principio del buffer
+        
+        st.success('Archivo procesado. Puedes descargarlo a continuación:')
+        st.download_button(label='Descargar resultado', data=output, file_name='resultado.xlsx', mime='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
