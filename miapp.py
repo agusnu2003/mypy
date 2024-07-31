@@ -11,7 +11,7 @@ def procesar_datos(archivo_general):
         return None
 
     # Asegúrate de que las columnas necesarias existen
-    required_columns = ['Id de referencia', 'Fecha planificada', 'Checkout', 'Observaciones', 'Bolsas', 'Kilos']
+    required_columns = ['Id de referencia', 'Fecha planificada', 'Checkout', 'Observaciones', 'Bolsas', 'Kilos', 'Comentarios']
     for col in required_columns:
         if col not in df.columns:
             st.error(f"El archivo no contiene la columna requerida: {col}")
@@ -21,16 +21,19 @@ def procesar_datos(archivo_general):
     df['gran generador'] = df['Id de referencia']
     df['Fecha Recolección'] = pd.to_datetime(df['Checkout']).dt.strftime('%Y-%m-%d')
     df['Hora Recolección'] = pd.to_datetime(df['Checkout']).dt.strftime('%H:%M:%S')
-  df['Observaciones'] = df['Observaciones'].fillna('') + ' ' + df['Comentarios'].fillna('')
+
+    # Combinar 'Observaciones' y 'Comentarios'
+    df['Observaciones'] = df['Observaciones'].fillna('') + ' ' + df['Comentarios'].fillna('')
+
     df['cantidad'] = df['Bolsas']
     df['peso (kg)'] = df['Kilos'].fillna(0)  # Rellenar valores nulos en 'peso (kg)' con 0
-    
+
     # Agregar columna 'Título' como columna vacía o con un valor predeterminado
     df['Título'] = ''  # Puedes ajustar esto si necesitas un valor específico
-    
+
     # Seleccionar las columnas necesarias
-    df_final = df[['Título','gran generador', 'Fecha Recolección', 'Hora Recolección', 'Observaciones', 'cantidad', 'peso (kg)' ]]
-    
+    df_final = df[['gran generador', 'Fecha Recolección', 'Hora Recolección', 'Observaciones', 'cantidad', 'peso (kg)', 'Título']]
+
     return df_final
 
 # Interfaz de usuario con Streamlit
