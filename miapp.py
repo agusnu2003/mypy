@@ -35,17 +35,11 @@ def procesar_datos(archivo_principal, archivo_generadores):
     df_principal['cantidad'] = df_principal['Bolsas']
     df_principal['peso (kg)'] = df_principal['Kilos'].fillna(0)  # Rellenar valores nulos en 'peso (kg)' con 0
 
-    # Buscar IDs faltantes
-    ids_faltantes = df_principal[df_principal['gran generador'].isna()]
-    ids_faltantes = ids_faltantes[['Id de referencia']].drop_duplicates()
-    ids_faltantes = ids_faltantes.rename(columns={'Id de referencia': 'gran generador'})
-
-    # Mapear IDs desde el archivo de generadores
+    # Crear un diccionario de mapeo para los IDs de generadores
     generadores_dict = dict(zip(df_generadores['Account Name'], df_generadores['Account ID']))
-    ids_faltantes['gran generador'] = ids_faltantes['gran generador'].map(generadores_dict)
 
-    # Actualizar IDs en el archivo principal
-    df_principal['gran generador'] = df_principal['gran generador'].fillna(ids_faltantes.set_index('gran generador').reindex(df_principal['gran generador'])['gran generador'])
+    # Buscar IDs faltantes y mapear con el diccionario
+    df_principal['gran generador'] = df_principal['gran generador'].map(generadores_dict).fillna(df_principal['gran generador'])
 
     # Eliminar duplicados basados en columnas específicas
     df_principal = df_principal.drop_duplicates(subset=['gran generador', 'Fecha Recolección', 'Hora Recolección', 'cantidad', 'peso (kg)'])
