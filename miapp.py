@@ -11,7 +11,7 @@ def procesar_datos(archivo_general):
         return None
 
     # Asegúrate de que las columnas necesarias existen
-    required_columns = ['Id de referencia', 'Fecha planificada', 'Checkout', 'Observaciones', 'Bolsas', 'Kilos', 'Comentarios' , 'Título']
+    required_columns = ['Id de referencia', 'Fecha planificada', 'Checkout', 'Observaciones', 'Bolsas', 'Kilos', 'Comentarios', 'Título']
     for col in required_columns:
         if col not in df.columns:
             st.error(f"El archivo no contiene la columna requerida: {col}")
@@ -19,7 +19,7 @@ def procesar_datos(archivo_general):
 
     # Renombrar y procesar columnas
     df['gran generador'] = df['Id de referencia']
-    df['Fecha Recolección'] = pd.to_datetime(df['Checkout']).dt.strftime('%Y-%m-%d')
+    df['Fecha Recolección'] = pd.to_datetime(df['Fecha planificada']).dt.strftime('%Y-%m-%d')
     df['Hora Recolección'] = pd.to_datetime(df['Checkout']).dt.strftime('%H:%M:%S')
 
     # Combinar 'Observaciones' y 'Comentarios'
@@ -31,8 +31,11 @@ def procesar_datos(archivo_general):
     # Agregar columna 'Título' como columna vacía o con un valor predeterminado
     df['nombre'] = df['Título']  # Puedes ajustar esto si necesitas un valor específico
 
+    # Eliminar duplicados basados en 'gran generador'
+    df = df.drop_duplicates(subset=['gran generador'])
+
     # Seleccionar las columnas necesarias
-    df_final = df[['nombre','gran generador', 'Fecha Recolección', 'Hora Recolección', 'Observaciones', 'cantidad', 'peso (kg)']]
+    df_final = df[['nombre', 'gran generador', 'Fecha Recolección', 'Hora Recolección', 'Observaciones', 'cantidad', 'peso (kg)']]
 
     return df_final
 
