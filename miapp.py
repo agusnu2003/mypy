@@ -45,8 +45,7 @@ def procesar_datos(archivo_principal, archivo_generadores):
     ids_faltantes['gran generador'] = ids_faltantes['gran generador'].map(generadores_dict)
 
     # Actualizar IDs en el archivo principal
-    df_principal = df_principal.merge(ids_faltantes[['gran generador']], how='left', on='gran generador', suffixes=('', '_final'))
-    df_principal['gran generador'] = df_principal['gran generador_final'].fillna(df_principal['gran generador'])
+    df_principal['gran generador'] = df_principal['gran generador'].fillna(ids_faltantes.set_index('gran generador').reindex(df_principal['gran generador'])['gran generador'])
 
     # Eliminar duplicados basados en columnas específicas
     df_principal = df_principal.drop_duplicates(subset=['gran generador', 'Fecha Recolección', 'Hora Recolección', 'cantidad', 'peso (kg)'])
@@ -55,7 +54,7 @@ def procesar_datos(archivo_principal, archivo_generadores):
     df_principal['nombre'] = df_principal['Título']
 
     # Seleccionar las columnas necesarias
-    df_final = df_principal[['nombre','gran generador', 'Fecha Recolección', 'Hora Recolección', 'Observaciones', 'cantidad', 'peso (kg)']]
+    df_final = df_principal[['nombre', 'gran generador', 'Fecha Recolección', 'Hora Recolección', 'Observaciones', 'cantidad', 'peso (kg)']]
     
     return df_final
 
