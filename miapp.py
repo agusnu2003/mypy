@@ -10,7 +10,6 @@ def procesar_datos(archivo_principal, archivo_generadores):
     except Exception as e:
         st.error(f"Error al leer los archivos: {e}")
         return None
-
     # Renombrar columnas para el merge
     df_generadores.rename(columns={'Account Name': 'Título', 'Account ID': 'Id Generador'}, inplace=True)
     
