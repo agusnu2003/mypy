@@ -22,7 +22,7 @@ def procesar_datos(archivo_principal, archivo_generadores):
     
     # Seleccionar y renombrar las columnas necesarias
     df['gran generador'] = df['Id de referencia']
-    df['Fecha Recolección'] = pd.to_datetime(df['Fecha planificada']).dt.strftime('%Y-%m-%d')
+    df['Fecha Recolección'] = pd.to_datetime(df['Checkout']).dt.strftime('%Y-%m-%d')
     df['Hora Recolección'] = pd.to_datetime(df['Checkout']).dt.strftime('%H:%M:%S')
     df['Observaciones'] = df['Observaciones']
     df['cantidad'] = df['Bolsas']
