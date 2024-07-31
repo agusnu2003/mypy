@@ -11,7 +11,7 @@ def procesar_datos(archivo_general):
         return None
 
     # Asegúrate de que las columnas necesarias existen
-    required_columns = ['Id de referencia', 'Fecha planificada', 'Checkout', 'Observaciones', 'Bolsas', 'Kilos', 'Comentarios']
+    required_columns = ['Id de referencia', 'Fecha planificada', 'Checkout', 'Observaciones', 'Bolsas', 'Kilos', 'Comentarios' , 'Título']
     for col in required_columns:
         if col not in df.columns:
             st.error(f"El archivo no contiene la columna requerida: {col}")
@@ -29,10 +29,10 @@ def procesar_datos(archivo_general):
     df['peso (kg)'] = df['Kilos'].fillna(0)  # Rellenar valores nulos en 'peso (kg)' con 0
 
     # Agregar columna 'Título' como columna vacía o con un valor predeterminado
-    df['Título'] = ''  # Puedes ajustar esto si necesitas un valor específico
+    df['nombre'] = df['Título']  # Puedes ajustar esto si necesitas un valor específico
 
     # Seleccionar las columnas necesarias
-    df_final = df[['gran generador', 'Fecha Recolección', 'Hora Recolección', 'Observaciones', 'cantidad', 'peso (kg)', 'Título']]
+    df_final = df[['nombre','gran generador', 'Fecha Recolección', 'Hora Recolección', 'Observaciones', 'cantidad', 'peso (kg)']]
 
     return df_final
 
