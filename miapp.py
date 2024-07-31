@@ -46,7 +46,16 @@ def procesar_datos(archivo_principal, archivo_generadores):
     
     # Actualizar IDs en el archivo principal
     df_principal = df_principal.merge(ids_faltantes[['gran generador']], how='left', on='gran generador', suffixes=('', '_final'))
-    df_principal['gran generador'] = df_principal['gran generador_final'].fillna(df_principal['gran generador'])
+    
+    # Depuración: Verificar columnas después del merge
+    st.write("Columnas después del merge:", df_principal.columns)
+    
+    # Verificar si 'gran generador_final' está en el DataFrame
+    if 'gran generador_final' in df_principal.columns:
+        df_principal['gran generador'] = df_principal['gran generador_final'].fillna(df_principal['gran generador'])
+    else:
+        st.error("'gran generador_final' no está en el DataFrame. Verifica los datos de entrada.")
+        return None
     
     # Eliminar duplicados basados en 'gran generador'
     df_principal = df_principal.drop_duplicates(subset=['gran generador'])
