@@ -26,8 +26,7 @@ def procesar_datos(archivo_principal, archivo_generadores):
 
     # Renombrar y procesar columnas en el archivo principal
     df_principal['gran generador'] = df_principal['Id de referencia']
-    
-    df_principal['Fecha Recolección'] = pd.to_datetime(df_principal['Fecha planificada']).dt.strftime('%Y-%m-%d')
+    df_principal['Fecha Recolección'] = pd.to_datetime(df_principal['Checkout']).dt.strftime('%Y-%m-%d')
     df_principal['Hora Recolección'] = pd.to_datetime(df_principal['Checkout']).dt.strftime('%H:%M:%S')
 
     # Combinar 'Observaciones' y 'Comentarios'
@@ -56,7 +55,7 @@ def procesar_datos(archivo_principal, archivo_generadores):
     df_principal['nombre'] = df_principal['Título']
 
     # Seleccionar las columnas necesarias
-    df_final = df_principal[['nombre','gran generador', 'Fecha Recolección', 'Hora Recolección', 'Observaciones', 'cantidad', 'peso (kg)']]
+    df_final = df_principal[['nombre', 'gran generador', 'Fecha Recolección', 'Hora Recolección', 'Observaciones', 'cantidad', 'peso (kg)']]
     
     return df_final
 
