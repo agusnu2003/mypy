@@ -29,6 +29,7 @@ def procesar_datos(archivo_principal, archivo_generadores):
     
     # Llenar los valores nulos en 'peso (kg)' con 0
     df['peso (kg)'] = df['peso (kg)'].fillna(0)
+    df['cantidad'] = df['cantidad'].fillna(0)
     
     # Crear el DataFrame final
     df_final = df[['gran generador', 'Fecha Recolección', 'Hora Recolección', 'Observaciones', 'cantidad', 'peso (kg)']]
